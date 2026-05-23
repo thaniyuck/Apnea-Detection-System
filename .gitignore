@@ -1,0 +1,12 @@
+# Python environment
+apnea_env/
+__pycache__/
+
+# Large Data files
+data/raw_mit_bih/
+data/*.csv
+*.pkl
+
+# Logs/System files
+*.log
+.DS_Store

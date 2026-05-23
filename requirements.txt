@@ -1,0 +1,19 @@
+sas_diagnostic_project/
+│
+├── firmware/
+│   └── esp32_max30102/
+│       └── esp32_max30102.ino      # Your C++ code for the ESP32 and OLED
+│
+├── data/
+│   ├── raw_mit_bih/                # Folder for the downloaded PhysioNet .dat/.hea files
+│   └── mit_bih_processed.csv       # The final CSV containing your 23 extracted features
+│
+├── src/                            # The core Python modules
+│   ├── __init__.py                 
+│   ├── data_acquisition.py         # Handles the PySerial connection and rolling buffer
+│   ├── signal_processing.py        # Contains the median and 4.8Hz IIR filters + SpO2 math
+│   ├── feature_extraction.py       # Contains the PRV and Multiscale Entropy algorithms
+│   └── ml_model.py                 # Handles Random Forest training and live predictions
+│
+├── main_headless.py                # The primary execution script that ties the src/ modules together
+└── requirements.txt                # List of your pip dependencies (numpy, scipy, antropy, scikit-learn, wfdb)
