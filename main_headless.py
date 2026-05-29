@@ -20,7 +20,15 @@ def process_live_window(red_np, ir_np):
 
     # --- THE PROXIMITY GUARD ---
     mean_ir = np.mean(ir_np)
-    if mean_ir < 30000:  
+    
+    # DEBUG: Menampilkan nilai asli sensor
+    print(f" [Debug] Sensor IR Baseline: {mean_ir:.0f}")
+
+    # ==============================================================
+    # CALIBRATION TUNED: Threshold dinaikkan menjadi 120000 
+    # (Titik tengah antara 90k saat kosong dan 190k saat ada jari)
+    # ==============================================================
+    if mean_ir < 120000:  
         # Send Error 'E' to ESP32 OLED
         if hardware:
             try:
@@ -28,16 +36,17 @@ def process_live_window(red_np, ir_np):
             except Exception as e:
                 print(f" [!] Failed to update OLED: {e}")
         
-        print(" Status:              📭 NO FINGER DETECTED")
-        print(" Action:              Please place finger on sensor to resume.")
+        print(" Status:               📭 NO FINGER DETECTED")
+        print(" Action:               Please place finger on sensor to resume.")
         return 
 
     # 1. Calculate SpO2
     spo2 = calculate_spo2(red_np, ir_np)
     
-    # 2. Clean signal and extract features
+    # 2. Clean BOTH signals and extract features properly
+    clean_red = preprocess_ppg(red_np, FS)
     clean_ir = preprocess_ppg(ir_np, FS)
-    features = extract_all_features(clean_ir, FS)
+    features = extract_all_features(clean_red, clean_ir, FS)
     
     print(f" Blood Oxygen (SpO2): {int(spo2)}%")
     
